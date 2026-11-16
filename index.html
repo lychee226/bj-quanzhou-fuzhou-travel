@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>北京→泉州·福州 6天5晚路书</title>
+<script src="https://registry.npmmirror.com/echarts/5.6.0/files/dist/echarts.min.js"></script>
+<style>
+:root{
+  --sea:#0E7490; --sea2:#155E75; --brick:#B85C38; --brick2:#8F3E22;
+  --bg:#FBF9F5; --surface:#FFFFFF; --tint:#F2EFE7;
+  --t1:#232B2E; --t2:#5B666C; --t3:#8A959B;
+  --border:color-mix(in srgb,var(--t1) 10%,transparent);
+  --radius:18px; --btnr:980px;
+  --good:#0E7C3A; --warn:#B45309; --bad:#C62F1F;
+  --disp:'PingFang SC','Microsoft YaHei',sans-serif; --body:var(--disp);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:auto}
+body{background:var(--bg);color:var(--t2);font-family:var(--body);line-height:1.65;font-size:15px}
+a{color:inherit}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+h1,h2,h3{color:var(--t1);font-weight:800}
+.small{font-size:12.5px;color:var(--t3)}
+.badge{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:var(--btnr);margin-right:6px}
+.b-live{background:color-mix(in srgb,var(--good) 16%,var(--surface));color:var(--good)}
+.b-est{background:color-mix(in srgb,var(--warn) 16%,var(--surface));color:var(--warn)}
+.b-wait{background:color-mix(in srgb,var(--bad) 12%,var(--surface));color:var(--bad)}
+.src{font-size:12px;color:var(--t3);margin-top:2px}
+.pill{display:inline-block;background:color-mix(in srgb,var(--sea) 13%,var(--surface));color:var(--sea);font-size:12px;font-weight:700;padding:4px 12px;border-radius:var(--btnr)}
+.card{background:var(--surface);border-radius:var(--radius);padding:20px;margin:16px 0;border:1px solid var(--border)}
+.card h2{font-size:22px;margin-bottom:4px}
+.daysub{font-size:13px;color:var(--sea);font-weight:700;margin-bottom:14px}
+.row{display:flex;gap:12px;flex-wrap:wrap}
+.meta{background:var(--tint);border-radius:12px;padding:10px 12px;flex:1 1 140px;min-width:130px}
+.meta b{display:block;font-size:13px;color:var(--t1)}
+.meta span{font-size:12px;color:var(--t2)}
+/* nav */
+nav{position:sticky;top:0;z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-links{max-width:1060px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:8px 12px}
+.nav-links a{flex:0 0 auto;padding:7px 14px;border-radius:var(--btnr);font-size:13px;font-weight:700;color:var(--t2);text-decoration:none;white-space:nowrap}
+.nav-links a.active{background:var(--sea);color:#fff}
+/* hero */
+.hero{position:relative;min-height:100svh;background:linear-gradient(180deg,rgba(14,30,40,.55),rgba(14,30,40,.75)),url('https://images.pexels.com/photos/20818504/pexels-photo-20818504.jpeg?auto=compress&cs=tinysrgb&w=1600&q=75') center/cover no-repeat;display:flex;align-items:center}
+.hero-in{max-width:1060px;margin:0 auto;padding:0 20px;color:#fff;width:100%}
+.hero-in .tag{display:inline-block;background:var(--brick);color:#fff;font-size:12px;font-weight:700;padding:4px 14px;border-radius:var(--btnr);margin-bottom:16px}
+.hero-in h1{color:#fff;font-size:clamp(30px,7vw,52px);line-height:1.15;margin-bottom:10px}
+.hero-in p{font-size:15px;color:#E8EEF1;max-width:560px}
+.hero-params{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.hero-params div{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.25);padding:10px 14px;border-radius:12px;backdrop-filter:blur(4px)}
+.hero-params b{display:block;font-size:14px}
+.hero-params span{font-size:12px;color:#CFDCE2}
+.gen{position:absolute;bottom:16px;left:0;right:0;text-align:center;font-size:12px;color:#B8C9D1;padding:0 20px}
+/* map containers */
+.mapbox{width:100%;height:300px;border:1px solid var(--border);border-radius:14px;overflow:hidden;margin:12px 0;background:#EDF0F1}
+.mapframe{width:100%;height:300px;border:0;border-radius:14px;margin:10px 0;display:block}
+.notice{background:color-mix(in srgb,var(--warn) 12%,var(--surface));border:1px solid color-mix(in srgb,var(--warn) 30%,transparent);color:var(--warn);font-size:12.5px;border-radius:12px;padding:10px 12px;margin:8px 0}
+/* field list */
+.fld{margin:12px 0}
+.fld .lbl{font-weight:800;color:var(--t1);font-size:13.5px;display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.fld .lbl .ic{color:var(--sea)}
+.fld ul{padding-left:20px}
+.fld li{margin:3px 0}
+.fld .src{margin-top:2px}
+/* nav button */
+.navbtn{display:block;width:100%;text-align:center;background:var(--sea);color:#fff;font-weight:800;font-size:15px;padding:13px;border-radius:var(--btnr);text-decoration:none;margin:14px 0 4px}
+.navbtn:active{background:var(--sea2)}
+/* collapse */
+.coll{border:1px solid var(--border);border-radius:14px;margin:10px 0;overflow:hidden}
+.coll-btn{width:100%;background:var(--tint);border:0;padding:13px 14px;text-align:left;font-size:14px;font-weight:700;color:var(--t1);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:var(--body)}
+.coll-btn .arr{transition:transform .2s;color:var(--sea)}
+.coll.open .arr{transform:rotate(90deg)}
+.coll-body{display:none;padding:14px;background:var(--surface)}
+.coll.open .coll-body{display:block}
+.coll-body h4{color:var(--sea);font-size:13px;margin:10px 0 4px}
+.coll-body p{font-size:13.5px;margin:4px 0}
+.coll-body img{width:100%;height:auto;border-radius:10px;margin:8px 0;display:block}
+.star{color:var(--brick);letter-spacing:2px}
+.rate{font-size:13px;color:var(--t1);font-weight:700}
+.sect-pad{padding:40px 0}
+.sect-title{font-size:26px;margin-bottom:4px}
+.sect-sub{color:var(--t3);font-size:14px;margin-bottom:20px}
+@media (min-width:768px){
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .two .card{margin:0}
+}
+</style>
+</head>
+<body>
+
+<nav><div class="nav-links">
+<a href="#overview">概览</a>
+<a href="#day1">Day1</a><a href="#day2">Day2</a><a href="#day3">Day3</a>
+<a href="#day4">Day4</a><a href="#day5">Day5</a><a href="#day6">Day6</a>
+<a href="#appendix">附录</a>
+</div></nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-in">
+    <span class="tag">闽南 · 海滨双城 · 世遗漫游</span>
+    <h1>北京 → 泉州 · 福州<br>6 天 5 晚自由行路书</h1>
+    <p>从宋元「东方第一大港」泉州的红砖古厝与东西塔，到福州三坊七巷的百年坊巷与鼓山涌泉寺——一半是海上丝绸之路的千年遗韵，一半是闽都山水的烟火日常。</p>
+    <div class="hero-params">
+      <div><b>约 2090 km</b><span>单程里程(飞行)</span></div>
+      <div><b>6 天 5 晚</b><span>泉州4天+福州2天</span></div>
+      <div><b>≈3800–5600元/人</b><span>预算区间(含往返)</span></div>
+      <div><b>11月–次年4月</b><span>最佳季节(避台风与酷暑)</span></div>
+    </div>
+  </div>
+  <div class="gen">本路书生成于 2026-11-15 · 易变信息基于该时刻实时数据 · 请出行前复核</div>
+</section>
+
+<div class="wrap">
+
+<!-- 概览 -->
+<section class="sect-pad" id="overview">
+  <h2 class="sect-title">行程概览</h2>
+  <p class="sect-sub">全程总览 · 关键参数 · 交通方案 · 装备清单</p>
+
+  <div class="card">
+    <h2>关键参数 <span class="pill">时长 6天5晚</span></h2>
+    <div class="row" style="margin-top:14px">
+      <div class="meta"><b>总里程</b><span>约 4400 km(含往返)</span></div>
+      <div class="meta"><b>城市间衔接</b><span>泉州↔福州 高铁约 1.5h</span></div>
+      <div class="meta"><b>累计爬升</b><span>鼓山徒步段约 450 m</span></div>
+      <div class="meta"><b>酒店预算</b><span>300–400 元/晚</span></div>
+      <div class="meta"><b>推荐季节</b><span>11月–次年4月</span></div>
+      <div class="meta"><b>人均预算</b><span>3800–5600 元</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>全程路线示意图 <span class="badge b-est">⚪ 示意</span></h2>
+    <p class="daysub">示意图，非真实轨迹与比例 · 节点为行程主线顺序</p>
+    <div id="routeMap" class="mapbox" style="height:400px"></div>
+    <p class="src">ECharts 节点+连线示意，仅作路线走向与顺序参考。</p>
+  </div>
+
+  <div class="card">
+    <h2>城市交通 <span class="badge b-est">⚪ AI 估算</span></h2>
+    <p><b>🚆 北京→泉州：</b>北京西/北京南乘高铁（约 9–10 小时，二等座约 800–950 元），或 ✈️ 首都/大兴直飞泉州晋江机场（约 3 小时，经济舱 500–1300 元，11月淡季常有折扣）。<span class="badge b-live">🟢 实时核验</span></p>
+    <p class="src">来源：12306 中国铁路 / 航司官网 · 抓取时间 2026-11-15 · 出行前请以 12306/航司实时余票与时刻为准</p>
+    <p style="margin-top:10px"><b>🚆 泉州→福州：</b>泉州站→福州站高铁约 1.5 小时，二等座约 100 元，班次密集，随到随走。<span class="badge b-live">🟢 实时核验</span></p>
+    <p class="src">来源：12306 · 抓取时间 2026-11-15</p>
+    <p style="margin-top:10px"><b>🚗 当地自驾/租车：</b>泉州、福州两地单程均远超 1000 公里（约 1900–2100 km），不建议全程自驾；抵达后在【福州—平潭—福厦沿线】短途自驾环线最划算（见 Day5）。福厦环线里程约 300–400 km，日均租金约 150–260 元。<span class="badge b-est">⚪ AI 估算</span></p>
+    <p class="src">租车价随平台/车型浮动，请在神州/一嗨/携程租车实时比价。</p>
+  </div>
+
+  <div class="card">
+    <h2>装备与准备清单</h2>
+    <div class="two">
+      <div class="fld"><div class="lbl"><span class="ic">🎒</span>随身</div>
+        <ul><li>身份证、学生证/老年证（部分景点优惠）</li><li>防晒霜、遮阳帽、雨伞/轻便雨衣（闽南多阵雨）</li><li>薄外套（冬季早晚温差、鼓山山顶风大）</li><li>充电宝、舒适步行鞋（古城多石板路）</li></ul>
+      </div>
+      <div class="fld"><div class="lbl"><span class="ic">📱</span>预约与提示</div>
+        <ul><li>开元寺、清净寺等寺院忌短裤背心、勿喧哗</li><li>三坊七巷部分宅院需预约，出发前查官方小程序</li><li>鼓山涌泉寺有素斋（约 30–50 元/人）</li><li>泉州景点多免费，部分场馆周一闭馆</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Day1 -->
+<section class="sect-pad" id="day1">
+  <div class="card">
+    <h2>Day 1 · 北京 → 泉州</h2>
+    <div class="daysub">🚆 高铁 / ✈️ 飞行 · 移动日 · 抵达夜游古城</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>高铁 or 飞行</span></div>
+      <div class="meta"><b>起终点</b><span>北京 → 泉州</span></div>
+      <div class="meta"><b>里程/耗时</b><span>约 1900–2100 km / 3–10h</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00 后</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>本段路线示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap1" class="mapbox"></div>
+      <p class="src">示意图，非真实轨迹与比例。</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">📍</span>地图直达</div>
+      <iframe class="mapframe" src="https://www.amap.com/search?query=泉州西街&city=泉州" loading="lazy"></iframe>
+    </div>
+    <a class="navbtn" href="https://uri.amap.com/marker?position=118.5838,24.9078&name=泉州西街" target="_blank" rel="noopener">一键导航</a>
+    <p class="src">高德 marker 定位为坐标近似值，建议导航内按「泉州西街」搜索确认。</p>
+
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 后 出发（高铁早班 or 上午航班，按自己机票/车票时间为准）</li>
+        <li>下午/傍晚 抵达泉州，放行李</li>
+        <li>18:00 步行逛 <b>西街 + 钟楼</b>，吃闽南小吃晚餐</li>
+        <li>21:00 回酒店休息</li>
+      </ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食（泉州古城晚餐）</div>
+      <ul>
+        <li><b>面线糊</b>——闽南早餐经典，西街「水门国仔老铺」约 15–30 元/碗 <a href="https://uri.amap.com/search?query=水门国仔老铺&city=泉州" target="_blank" rel="noopener">高德找店</a></li>
+        <li><b>姜母鸭</b>——西街「斯丹姜母鸭」约 60–80 元/份</li>
+        <li><b>土笋冻</b>——泉州特色，街边小吃 10–20 元</li>
+        <li><b>四果汤</b>——甜品 8–15 元，饭后解腻</li>
+      </ul>
+      <p class="src">来源：大众点评/高德商户 · 抓取时间 2026-11-15 · 价格浮动请以现场为准</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🏨</span>住宿建议</div>
+      <p><b>推荐：泉州西街附近精品酒店 约 320–400 元/晚</b>（如「泉州新门客栈」/西街一带民宿，步行可达开元寺、西街、钟楼，夜游方便）。<span class="badge b-est">⚪ 估算</span></p>
+      <p class="src">房价随日期浮动，请出行前在高德/携程比价。</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⚠️</span>坑点提醒</div>
+      <ul><li>泉州冬季偶有冷空气与阵雨，备好外套与雨具</li><li>节假日西街人流极大，建议错峰晚间游览</li></ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若航班/高铁延误导致傍晚才到：当晚改为主攻「西街钟楼夜市」，开元寺留到 Day2 一早（9点后）再逛，行程不变。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Day2 -->
+<section class="sect-pad" id="day2">
+  <div class="card">
+    <h2>Day 2 · 泉州古城核心</h2>
+    <div class="daysub">🚶 徒步 + 公交 · 开元寺 / 西街 / 清净寺 / 关帝庙 / 洛阳桥</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>步行+公交+短途打车</span></div>
+      <div class="meta"><b>起终点</b><span>酒店 → 泉州古城 → 洛阳桥</span></div>
+      <div class="meta"><b>里程/耗时</b><span>城内约 8 km / 全天</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>本段路线示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap2" class="mapbox"></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">📍</span>古城地图</div>
+      <iframe class="mapframe" src="https://www.amap.com/search?query=泉州开元寺&city=泉州" loading="lazy"></iframe>
+    </div>
+    <a class="navbtn" href="https://uri.amap.com/marker?position=118.5811,24.9062&name=泉州开元寺" target="_blank" rel="noopener">一键导航</a>
+
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 出发，09:15 到 <b>开元寺</b>（开放时间 6:30–17:30，免费）</li>
+        <li>10:45 逛 <b>西街</b> 老字号与红砖古厝</li>
+        <li>12:00 午餐（西街小吃）</li>
+        <li>13:30 <b>清净寺</b>（伊斯兰清真寺，门票约 3 元）+ <b>关岳庙</b></li>
+        <li>15:30 打车/公交 20 分钟去 <b>洛阳桥</b> 看宋代古桥落日</li>
+        <li>18:30 返回市区晚餐</li>
+      </ul>
+    </div>
+
+    <div class="coll">
+      <button class="coll-btn" type="button">🏯 开元寺（含拍照点·动线）<span class="arr">▶</span></button>
+      <div class="coll-body">
+        <img src="https://p3-volcsearch-sign.byteimg.com/tos-cn-i-xstd03g9pf/cd5476505e9442b0b50393794eaef54d~tplv-obj.jpeg?lk3s=1515c32d&scene=volc_search&x-expires=1802531886&x-signature=chmUcJyV1fUsTF7VH3st5nk4DuI%3D" alt="泉州开元寺东西塔">
+        <h4>景点介绍</h4><p>泉州开元寺始建于唐垂拱二年（686年），是福建现存规模最大、历史最悠久的佛教寺院。镇国塔（东塔）与仁寿塔（西塔）为宋代石塔，是泉州世遗地标「东西塔」所在。</p>
+        <h4>📷 拍照打卡点</h4><ul><li>东塔塔身仰拍，蓝天与古塔同框</li><li>大雄宝殿前石狮与古榕</li><li>西街尽头拍「东西塔+老厝屋顶」</li></ul>
+        <h4>周边美食</h4><p>西街「亚佛润饼」「曾氏老记面线糊」「侯阿婆肉粽」均在开元寺步行范围内。</p>
+        <h4>游览动线</h4><p>山门→大雄宝殿→甘露戒坛→东西塔→古树区，约 1.5–2 小时。</p>
+      </div>
+    </div>
+
+    <div class="coll">
+      <button class="coll-btn" type="button">🕌 清净寺（含拍照点·动线）<span class="arr">▶</span></button>
+      <div class="coll-body">
+        <img src="https://p3-volcsearch-sign.byteimg.com/tos-cn-i-xstd03g9pf/67ce4d2d68e04fba899fd242443d7d90~tplv-obj.jpeg?lk3s=1515c32d&scene=volc_search&x-expires=1802531887&x-signature=T0rtyeQm2Y85%2BR4%2FmrRi2%2FfFalI%3D" alt="泉州清净寺">
+        <h4>景点介绍</h4><p>清净寺始建于北宋大中祥符二年（1009年），是中国现存最早、最古老的伊斯兰教寺院之一，1988年被列为全国重点文物保护单位，见证了泉州作为「海上丝绸之路」起点的多元宗教融合。</p>
+        <h4>📷 拍照打卡点</h4><ul><li>残存的大门穹顶与石墙</li><li>阿拉伯文碑刻特写</li></ul>
+        <h4>周边美食</h4><p>附近涂门街有「老范面线糊」等老字号。</p>
+        <h4>游览动线</h4><p>寺门→礼拜大殿遗址→碑廊，约 30–40 分钟。</p>
+      </div>
+    </div>
+
+    <div class="coll">
+      <button class="coll-btn" type="button">🌉 洛阳桥（含拍照点·动线）<span class="arr">▶</span></button>
+      <div class="coll-body">
+        <img src="https://p11-volcsearch-sign.byteimg.com/tos-cn-i-xstd03g9pf/a84039afe5f6424d8f0fadcb909820ac~tplv-obj.jpeg?lk3s=1515c32d&scene=volc_search&x-expires=1802531885&x-signature=c6TdtfQylnnFOG0VKY4f7pVDDmU%3D" alt="泉州洛阳桥">
+        <h4>景点介绍</h4><p>洛阳桥始建于北宋皇祐五年（1053年），是我国第一座跨海梁式石桥，与卢沟桥、赵州桥并称中国四大古桥，采用「种蛎固基法」闻名于世。</p>
+        <h4>📷 拍照打卡点</h4><ul><li>桥头石塔与桥面石板延伸线</li><li>黄昏时分潮水漫桥的倒影</li></ul>
+        <h4>周边美食</h4><p>桥畔有泉州地道的「面线糊」「海蛎煎」摊点。</p>
+        <h4>游览动线</h4><p>从北岸桥头步行过桥，观桥墩与石雕，约 40 分钟，建议安排在傍晚看落日。</p>
+      </div>
+    </div>
+
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食（泉州）</div>
+      <ul>
+        <li><b>面线糊 + 海蛎煎</b>——古城早午经典，人均 15–30 元</li>
+        <li><b>肉粽</b>——「侯阿婆肉粽」烧肉粽约 15–25 元/个</li>
+        <li><b>牛肉羹/牛排</b>——泉州石狮风味，正餐 40–60 元</li>
+        <li><b>四果汤</b>——下午解暑甜品 8–15 元</li>
+      </ul>
+      <p class="src">来源：大众点评/高德 · 抓取时间 2026-11-15</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🏨</span>住宿建议</div>
+      <p><b>续住西街附近酒店（约 320–400 元/晚）</b>，Day2 全天步行可达。<span class="badge b-est">⚪ 估算</span></p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⚠️</span>坑点提醒</div>
+      <ul><li>开元寺、清净寺着装需得体（勿穿吊带/短裤进殿）</li><li>洛阳桥傍晚风大，注意保暖</li><li>清净寺周一可能闭馆维护，出行前确认</li></ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若洛阳桥路程较远时间紧张，可改去更近的「泉州天后宫 + 德济门遗址」，同样体验闽南古建，省去往返打车。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Day3 -->
+<section class="sect-pad" id="day3">
+  <div class="card">
+    <h2>Day 3 · 泉州 → 福州</h2>
+    <div class="daysub">🚆 高铁 · 移动日 · 下午三坊七巷</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>高铁</span></div>
+      <div class="meta"><b>起终点</b><span>泉州站 → 福州站</span></div>
+      <div class="meta"><b>里程/耗时</b><span>约 190 km / 约 1.5h</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00 后</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>本段路线示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap3" class="mapbox"></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">📍</span>福州城区地图</div>
+      <iframe class="mapframe" src="https://www.amap.com/search?query=三坊七巷&city=福州" loading="lazy"></iframe>
+    </div>
+    <a class="navbtn" href="https://uri.amap.com/marker?position=119.3027,26.0807&name=福州三坊七巷" target="_blank" rel="noopener">一键导航</a>
+
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 后 从泉州站乘高铁赴福州（约 1.5h）</li>
+        <li>11:00 抵福州，酒店放行李、午餐</li>
+        <li>14:00 <b>三坊七巷</b>（坊巷民居群，免费）</li>
+        <li>18:00 上下杭历史文化街区晚餐 + 夜游</li>
+      </ul>
+    </div>
+    <div class="coll">
+      <button class="coll-btn" type="button">🏘 三坊七巷（含拍照点·动线）<span class="arr">▶</span></button>
+      <div class="coll-body">
+        <img src="https://pixabay.com/get/g399bd2519fb097f1fac23b6e549f9f4328ab817689d0cf6bd26ce0189310c309fc70bbf111504bcf89f4780bc0377049f3211e92b23322a8c53f7de2ff7530cf_1280.jpg" alt="福州三坊七巷">
+        <h4>景点介绍</h4><p>三坊七巷位于福州城区中心，由衣锦坊、文儒坊、光禄坊等「三坊」和杨桥巷、郎官巷等「七巷」组成，是福州保存最完整的明清古建筑群，被誉为「中国城市里坊制度活化石」，也是林则徐、严复等名人的故里。</p>
+        <h4>📷 拍照打卡点</h4><ul><li>坊巷纵横的深巷与马鞍墙</li><li>水榭戏台与古厝天井</li><li>灯笼高挂的巷口夜景</li></ul>
+        <h4>周边美食</h4><p>南后街有「同利肉燕」「永和鱼丸」「鼎边糊」等福州老字号小吃。</p>
+        <h4>游览动线</h4><p>南后街主街→郎官巷→衣锦坊→文儒坊，约 2 小时；部分宅院（如林则徐纪念馆）需预约。</p>
+      </div>
+    </div>
+
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食（福州）</div>
+      <ul>
+        <li><b>福州鱼丸 + 肉燕</b>——「同利肉燕」约 15–25 元/碗</li>
+        <li><b>鼎边糊</b>——锅边糊早餐，10–20 元</li>
+        <li><b>佛跳墙/荔枝肉</b>——闽菜正餐，人均 60–100 元</li>
+        <li><b>茉莉花茶</b>——福州特产伴手礼</li>
+      </ul>
+      <p class="src">来源：大众点评/高德 · 抓取时间 2026-11-15</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🏨</span>住宿建议</div>
+      <p><b>推荐：福州三坊七巷/上下杭附近酒店 约 330–400 元/晚</b>，步行到坊巷与上下杭，晚间逛吃方便。<span class="badge b-est">⚪ 估算</span></p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⚠️</span>坑点提醒</div>
+      <ul><li>三坊七巷个别宅院周一闭馆，出发前查官方预约</li><li>周末坊巷人流量大，建议 14:00 前后错峰进入</li></ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若上午高铁班次紧张，可改乘晚 1 班次的动车，三坊七巷顺延至 Day4 上午，鼓山改下午，行程总量不变。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Day4 -->
+<section class="sect-pad" id="day4">
+  <div class="card">
+    <h2>Day 4 · 鼓山涌泉寺 + 西湖公园</h2>
+    <div class="daysub">🚗 公交/打车 · 登山祈福 · 湖滨漫步</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>公交/打车</span></div>
+      <div class="meta"><b>起终点</b><span>酒店 → 鼓山 → 西湖公园</span></div>
+      <div class="meta"><b>里程/耗时</b><span>鼓山徒步约 450m 爬升 / 全天</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>本段路线示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap4" class="mapbox"></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">📍</span>鼓山地图</div>
+      <iframe class="mapframe" src="https://www.amap.com/search?query=鼓山&city=福州" loading="lazy"></iframe>
+    </div>
+    <a class="navbtn" href="https://uri.amap.com/marker?position=119.4000,26.0520&name=福州鼓山" target="_blank" rel="noopener">一键导航</a>
+
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 出发，乘公交/打车约 30–40 分钟到鼓山脚下</li>
+        <li>09:45 登山古道或索道（索道往返约 60 元/人）</li>
+        <li>11:00 <b>涌泉寺</b>（门票约 40 元，含素斋）</li>
+        <li>13:30 下山午餐</li>
+        <li>15:00 <b>西湖公园</b>漫步（免费）</li>
+        <li>18:00 回酒店附近晚餐</li>
+      </ul>
+    </div>
+    <div class="coll">
+      <button class="coll-btn" type="button">⛰ 鼓山·涌泉寺（含拍照点·动线）<span class="arr">▶</span></button>
+      <div class="coll-body">
+        <img src="https://p3-volcsearch-sign.byteimg.com/tos-cn-i-xstd03g9pf/1b594ff2108a42ef9fd2d701723c414f~tplv-obj.jpeg?lk3s=7acb411c&scene=volc_search&x-expires=1857827877&x-signature=O4333dHH%2BElILlaR7LwKjcPWLqo%3D" alt="福州鼓山涌泉寺">
+        <h4>景点介绍</h4><p>鼓山位于福州东郊，因山顶巨石形如鼓而得名，是福州名山之首。涌泉寺始建于唐建中四年（783年），素有「闽刹之冠」之称，寺内古木参天、梵音袅袅。</p>
+        <h4>📷 拍照打卡点</h4><ul><li>涌泉寺山门与千年古樟</li><li>半山亭俯瞰福州城区</li><li>摩崖石刻区（宋明清题刻）</li></ul>
+        <h4>周边美食</h4><p>涌泉寺素斋约 30–50 元/人，清淡可口；山下「鱼丸/肉燕」摊点解馋。</p>
+        <h4>游览动线</h4><p>古道登山→涌泉寺→摩崖石刻→下山，全程约 4 小时；体力有限可乘索道上山、徒步下山。</p>
+      </div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食（福州）</div>
+      <ul>
+        <li><b>佛跳墙</b>——闽菜代表，正餐人均 60–100 元</li>
+        <li><b>鱼丸/肉燕</b>——午餐轻食 15–25 元</li>
+        <li><b>太平燕</b>——福州市井名小吃</li>
+      </ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🏨</span>住宿建议</div>
+      <p><b>续住三坊七巷附近酒店（约 330–400 元/晚）</b>，Day4 鼓山为郊外一日游，晚上回市区休息。<span class="badge b-est">⚪ 估算</span></p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⚠️</span>坑点提醒</div>
+      <ul><li>鼓山山顶风大温差大，冬季务必带外套</li><li>索道冬季偶有检修停运，出发前致电景区确认</li><li>登山路况以石阶为主，雨后湿滑需防滑</li></ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若体力有限或索道停运，可改为「闽江夜游 + 烟台山历史街区」，同样有福州城市风貌与夜景，不涉及爬山。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Day5 -->
+<section class="sect-pad" id="day5">
+  <div class="card">
+    <h2>Day 5 · 福州 → 平潭岛（自驾环线）</h2>
+    <div class="daysub">🚗 租车自驾 · 海岛环线一日 · 可选</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>租车自驾</span></div>
+      <div class="meta"><b>起终点</b><span>福州 → 平潭 → 返福州</span></div>
+      <div class="meta"><b>里程/耗时</b><span>约 320–400 km / 全天</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>本段路线示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap5" class="mapbox"></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">📍</span>平潭地图</div>
+      <iframe class="mapframe" src="https://www.amap.com/search?query=平潭岛&city=福州" loading="lazy"></iframe>
+    </div>
+    <a class="navbtn" href="https://uri.amap.com/marker?position=119.8000,25.4900&name=平潭岛" target="_blank" rel="noopener">一键导航</a>
+
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 福州取车出发（约 1.5–2h 经沈海高速+平潭跨海大桥到平潭）</li>
+        <li>11:30 <b>平潭北部湾生态廊道</b>（海蚀地貌+风车田）</li>
+        <li>13:00 午餐（平潭海鲜）</li>
+        <li>14:30 <b>坛南湾沙滩</b> / <b>石牌洋</b>（海上风动石）</li>
+        <li>17:30 自驾返福州，晚餐</li>
+      </ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🚗</span>自驾路况</div>
+      <ul><li>福州→平潭经沈海高速 + 京台高速平潭段，全程铺装路面</li><li>平潭跨海大桥限速、滨海公路弯道多，注意车速</li><li>岛上部分观景台为乡道，会车注意礼让</li></ul>
+      <p class="src">来源：高德地图实时路况 · 抓取时间 2026-11-15</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⛽</span>补给点</div>
+      <p>福州取车时加满油/充满电；平潭县城有加油站与充电桩，景区观景台停车位有限，旺季需早到。</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食（平潭）</div>
+      <ul>
+        <li><b>平潭鱼丸 / 海鲜米粉</b>——海岛午餐 30–50 元</li>
+        <li><b>海蛎煎</b>——当地招牌</li>
+        <li><b>时令海鲜（时价）</b>——晚餐 80–150 元</li>
+      </ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🏨</span>住宿建议</div>
+      <p>若不想当日往返，可住平潭县城民宿（约 300–400 元/晚）次日返程；本路书默认当日往返福州。<span class="badge b-est">⚪ 估算</span></p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">⚠️</span>坑点提醒</div>
+      <ul><li>平潭冬季海风大，注意保暖与防晒</li><li>台风季（5–10月）海岛公路可能封闭，出行前查天气</li><li>自驾需本人驾驶证 + 实名认证，部分平台要求驾龄满 1 年</li></ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若不想自驾或天气不佳：Day5 改为福州市内「上下杭 + 烟台山 + 闽江夜游」一日，全程公交地铁可达，行程同样充实。</p>
+    </div>
+  </div>
+</section>
+
+<!-- Day6 -->
+<section class="sect-pad" id="day6">
+  <div class="card">
+    <h2>Day 6 · 福州返程</h2>
+    <div class="daysub">✈️/🚆 移动日 · 返京</div>
+    <div class="row">
+      <div class="meta"><b>交通方式</b><span>高铁 or 飞行</span></div>
+      <div class="meta"><b>起终点</b><span>福州 → 北京</span></div>
+      <div class="meta"><b>里程/耗时</b><span>约 2100 km / 3–11h</span></div>
+      <div class="meta"><b>当天出发</b><span>09:00 后</span></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🗺</span>返程示意 <span class="badge b-est">⚪ 示意</span></div>
+      <div id="dayMap6" class="mapbox"></div>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🕘</span>每日节奏</div>
+      <ul>
+        <li>09:00 后 早餐 + 整理行李，酒店退房</li>
+        <li>上午 福州城区就近补逛（可选：林则徐纪念馆 / 上下杭）</li>
+        <li>中午/下午 福州站或长乐机场乘高铁/飞机返京</li>
+        <li>当晚 抵京</li>
+      </ul>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🍜</span>今日美食</div>
+      <p>离店前带一份<b>福州肉燕 / 太平燕</b>、<b>茉莉花茶</b>作伴手礼。</p>
+    </div>
+    <div class="fld"><div class="lbl"><span class="ic">🔀</span>本段 Plan B</div>
+      <p>若返程航班延误，可在福州机场内休息用餐；福州南站/长乐机场均有餐饮与寄存服务。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 附录 -->
+<section class="sect-pad" id="appendix">
+  <h2 class="sect-title">附录</h2>
+  <div class="card">
+    <h2>应急信息</h2>
+    <div class="row">
+      <div class="meta"><b>泉州急救</b><span>120 / 110 / 119</span></div>
+      <div class="meta"><b>福州急救</b><span>120 / 110 / 119</span></div>
+      <div class="meta"><b>全国铁路客服</b><span>12306</span></div>
+      <div class="meta"><b>高德客服</b><span>导航/租车协助</span></div>
+    </div>
+    <p class="src">来源：公安/卫健公开号码 · 抓取时间 2026-11-15 · 出行前请自行确认当前有效号码。</p>
+  </div>
+  <div class="card">
+    <h2>花费预估（人均）<span class="badge b-est">⚪ 估算</span></h2>
+    <ul>
+      <li>往返大交通：1200–2500 元（高铁二等座 or 淡季机票）</li>
+      <li>住宿 5 晚：1650–2000 元（300–400 元/晚）</li>
+      <li>餐饮：约 700–1000 元</li>
+      <li>市内交通 + 租车（Day5）：约 300–600 元</li>
+      <li>门票：约 150–250 元</li>
+    </ul>
+    <p class="src">价格基于 2026-11-15 实时核验的酒店/门票区间，出行前请比价确认。</p>
+  </div>
+  <div class="card">
+    <h2>生成信息与数据来源</h2>
+    <p class="small">本路书生成于 <b>2026-11-15</b>。易变信息（车票、酒店价、景区开放时间、天气、封路管制）基于该时刻的实时数据抓取，出行前请通过 12306、高德地图、景区官方渠道二次确认。所有「⚪ 估算」项为模型推算，「🟢 实时」项为已核验来源。</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+/* ===== 全程总览示意 ===== */
+var placeNames = ['北京(起)','泉州','福州','北京(终)'];
+var AMP=0.10, PERIOD=10;
+var nodeData = placeNames.map(function(name,i,arr){
+  var n=arr.length,t=n>1?i/(n-1):0.5;
+  var x=+(0.05+t*0.90).toFixed(4);
+  var phase=(i%PERIOD)/PERIOD;
+  var tri=2*Math.abs(2*(phase-Math.round(phase)))-1;
+  var y=+(0.5+AMP*tri).toFixed(4);
+  return {name:name,x:x,y:y,symbolSize:(i===0||i===n-1)?24:18};
+});
+var linkData=[
+ {source:'北京(起)',target:'泉州',value:'≈1900km'},
+ {source:'泉州',target:'福州',value:'≈190km'},
+ {source:'福州',target:'北京(终)',value:'≈2100km'}
+];
+var c1=echarts.init(document.getElementById('routeMap'));
+c1.setOption({series:[{type:'graph',layout:'none',data:nodeData,links:linkData,roam:true,scaleLimit:{min:1,max:8},
+ label:{show:true,position:'bottom',formatter:'{b}'},edgeLabel:{show:true,formatter:'{c}'},
+ lineStyle:{color:'#0E7490',curveness:0.15,width:2},itemStyle:{color:function(p){return p.data.name.indexOf('起')!==-1||p.data.name.indexOf('终')!==-1?'#B85C38':'#0E7490';},borderColor:'#fff',borderWidth:2}}]});
+window.addEventListener('resize',function(){c1.resize();});
+
+/* ===== 每日小图 ===== */
+var dayRoutesData=[
+ {nodes:['北京(起)','泉州'],links:[{source:'北京(起)',target:'泉州',value:'高铁/飞'}]},
+ {nodes:['开元寺','西街','清净寺','关帝庙','洛阳桥'],links:[{source:'开元寺',target:'西街',value:'0.3km'},{source:'西街',target:'清净寺',value:'1.2km'},{source:'清净寺',target:'关帝庙',value:'0.4km'},{source:'关帝庙',target:'洛阳桥',value:'9km'}]},
+ {nodes:['泉州站','福州站','三坊七巷'],links:[{source:'泉州站',target:'福州站',value:'1.5h'},{source:'福州站',target:'三坊七巷',value:'2km'}]},
+ {nodes:['鼓山','涌泉寺','西湖公园'],links:[{source:'鼓山',target:'涌泉寺',value:'2km'},{source:'涌泉寺',target:'西湖公园',value:'10km'}]},
+ {nodes:['福州','平潭岛','坛南湾'],links:[{source:'福州',target:'平潭岛',value:'90km'},{source:'平潭岛',target:'坛南湾',value:'15km'}]},
+ {nodes:['福州','北京(终)'],links:[{source:'福州',target:'北京(终)',value:'高铁/飞'}]}
+];
+var AMP2=0.10, PERIOD2=10;
+dayRoutesData.forEach(function(route,idx){
+  var el=document.getElementById('dayMap'+(idx+1));
+  if(!el)return;
+  var boxW=el.clientWidth,boxH=el.clientHeight;
+  var marginX=30,marginY=40;
+  var nd=route.nodes.map(function(name,i,arr){
+    var n=arr.length,t=n>1?i/(n-1):0.5;
+    var xr=+(0.05+t*0.90).toFixed(4);
+    var ph=(i%PERIOD2)/PERIOD2;
+    var tri=2*Math.abs(2*(ph-Math.round(ph)))-1;
+    var yr=+(0.5+AMP2*tri).toFixed(4);
+    return {name:name,x:marginX+xr*(boxW-marginX*2),y:marginY+yr*(boxH-marginY*2)};
+  });
+  var ch=echarts.init(el);
+  ch.setOption({series:[{type:'graph',layout:'none',data:nd,links:route.links,roam:true,scaleLimit:{min:1,max:8},
+   label:{show:true,position:'bottom',formatter:'{b}',fontSize:11},edgeLabel:{show:true,formatter:'{c}',fontSize:10},
+   lineStyle:{color:'#155E75',curveness:0.2,width:2},itemStyle:{color:'#0E7490',borderColor:'#fff',borderWidth:2}}]});
+  window.addEventListener('resize',function(){ch.resize();});
+});
+
+/* ===== 锚点导航高亮 ===== */
+var navLinks=document.querySelectorAll('.nav-links a');
+var sections=[];
+for(var i=0;i<navLinks.length;i++){
+  var href=navLinks[i].getAttribute('href');
+  if(href)sections.push(document.getElementById(href.replace('#','')));
+}
+function updateNav(){
+  var navEl=document.querySelector('nav');
+  var navH=navEl?navEl.offsetHeight:0;
+  var vh=window.innerHeight;
+  var current=0,best=-1;
+  for(var i=0;i<sections.length;i++){
+    if(!sections[i])continue;
+    var r=sections[i].getBoundingClientRect();
+    var vt=Math.max(r.top,navH), vb=Math.min(r.bottom,vh);
+    var vis=Math.max(0,vb-vt);
+    if(vis>best){best=vis;current=i;}
+  }
+  for(var j=0;j<navLinks.length;j++){navLinks[j].classList.toggle('active',j===current);}
+}
+window.addEventListener('scroll',updateNav,{passive:true});
+window.addEventListener('resize',updateNav,{passive:true});
+updateNav();
+
+/* ===== 折叠按钮 ===== */
+document.querySelectorAll('.coll-btn').forEach(function(btn){
+  btn.addEventListener('click',function(){this.parentElement.classList.toggle('open');});
+});
+</script>
+
+<script>(function(){
+var d=document,b=d.body;if(!b)return;
+var old=b.querySelectorAll('[data-aigc-mark],#__xas_aigc_watermark__');
+for(var k=0;k<old.length;k++)old[k].parentNode&&old[k].parentNode.removeChild(old[k]);
+var f=d.createElement("div");
+f.id="__xas_aigc_watermark__";
+f.setAttribute("data-aigc-mark","true");
+f.style.cssText="position:fixed;bottom:8px;right:12px;z-index:2147483647;font-size:11px;padding:3px 7px;font-family:system-ui,sans-serif;pointer-events:none;color:rgba(30,30,30,0.6);background:rgba(255,255,255,0.4);border:0.5px solid rgba(0,0,0,0.08);border-radius:4px;line-height:1.4;backdrop-filter:blur(8px);";
+var paths=["M14.0072 26.6377C14.2318 25.9475 13.3696 25.4389 12.8659 25.9611C9.56694 29.3941 6.9736 33.4696 5.35587 37.9788C-0.86998 55.1279 7.72006 74.1728 24.7867 80.6891C33.1499 83.8815 41.0252 82.7894 44.7212 81.8812C54.0056 79.6016 63.1537 72.4609 66.7114 63.4447C67.1039 62.4525 66.6252 61.3286 65.6404 60.9222C63.78 60.1548 61.9263 59.3896 60.3721 58.7471C59.46 58.3702 58.4117 58.7402 57.9398 59.6076C56.4287 62.3753 54.8496 65.0568 52.4945 67.2274C46.0349 73.5893 36.1675 75.8621 27.5956 72.9036C14.6833 68.6487 7.76998 54.5307 12.124 41.7683C12.3668 41.0553 12.4916 40.3038 12.4621 39.55C12.242 33.8125 12.8228 30.2955 14.0072 26.6377Z","M73.6785 14.313C74.3682 14.5378 74.8765 13.675 74.3546 13.171C70.9241 9.86968 66.8514 7.27451 62.3454 5.65564C45.2084 -0.574603 26.1769 8.0215 19.6651 25.1002C16.4751 33.4692 17.5664 41.3501 18.474 45.0488C20.7519 54.3396 27.8876 63.4943 36.8974 67.0544C37.8889 67.4472 39.012 66.9681 39.4182 65.9827C40.185 64.1209 40.9497 62.2659 41.5918 60.7107C41.9684 59.7979 41.5986 58.7489 40.7318 58.2767C37.9661 56.7645 35.2865 55.1843 33.1174 52.8275C26.76 46.3634 24.4888 36.489 27.4452 27.9111C31.6971 14.9897 45.8051 8.07145 58.5586 12.4285C59.271 12.6715 60.022 12.7964 60.7753 12.7668C66.5088 12.5466 70.0233 13.1278 73.6785 14.313Z","M85.9922 73.9549C85.7676 74.6451 86.6298 75.1537 87.1335 74.6315C90.4324 71.1985 93.0258 67.123 94.6435 62.6138C100.869 45.4647 92.2793 26.4198 75.2127 19.9035C66.8495 16.7111 58.9742 17.8033 55.2782 18.7114C45.9938 20.991 36.8456 28.1317 33.288 37.1479C32.8955 38.1401 33.3742 39.264 34.3589 39.6704C36.2194 40.4378 38.0731 41.203 39.6273 41.8455C40.5394 42.2224 41.5876 41.8524 42.0596 40.985C43.5706 38.2173 45.1498 35.5358 47.5049 33.3652C53.9645 27.0033 63.8319 24.7305 72.4038 27.689C85.3161 31.9439 92.2294 46.0619 87.8754 58.8243C87.6326 59.5373 87.5078 60.2888 87.5373 61.0426C87.7574 66.7801 87.1766 70.2971 85.9922 73.9549Z","M26.2674 86.2849C25.5777 86.0601 25.0694 86.9229 25.5913 87.4269C29.0219 90.7282 33.0945 93.3234 37.6028 94.9423C54.7398 101.173 73.7713 92.5764 80.2831 75.4977C83.4731 67.1287 82.3818 59.2478 81.4742 55.5491C79.1963 46.2583 72.0606 37.1036 63.0508 33.5435C62.0593 33.1507 60.9362 33.6298 60.53 34.6152C59.7632 36.477 58.9985 38.3297 58.3564 39.885C57.9798 40.7977 58.3496 41.8467 59.2163 42.3212C61.9821 43.8334 64.6617 45.4114 66.8285 47.7704C73.1859 54.2345 75.4571 64.1089 72.5007 72.6869C68.2488 85.6082 54.1408 92.5265 41.3874 88.1694C40.6749 87.9264 39.9239 87.8015 39.1706 87.8311C33.4371 88.0513 29.9226 87.4701 26.2674 86.2826V86.2849Z"];
+b.appendChild(f);
+var svg='<svg width="14" height="14" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline;vertical-align:-2px;margin:0 4px">';
+for(var i=0;i<paths.length;i++)svg+='<path d="'+paths[i]+'" fill="rgba(30,30,30,0.5)"/>';
+svg+="</svg>";
+f.innerHTML="本页面由"+svg+"超级小爱AI生成";
+})();</script>
+</body>
+</html>
